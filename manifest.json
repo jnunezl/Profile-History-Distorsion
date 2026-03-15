@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "name": "Random Search",
+  "version": "13.0",
+  "description": "Búsquedas aleatorias: elige idioma, buscador e intervalo (segundos o minutos).",
+  "icons": {
+    "48": "icon_active.png",
+    "96": "icon_active.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "48": "icon_inactive.png",
+      "96": "icon_inactive.png"
+    },
+    "default_title": "Random Search · Inactivo — clic para activar"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "permissions": [
+    "tabs",
+    "alarms",
+    "storage",
+    "contextMenus",
+    "https://www.google.com/*",
+    "https://www.bing.com/*",
+    "https://duckduckgo.com/*",
+    "https://yandex.com/*",
+    "https://*.wikipedia.org/*",
+    "https://trends.google.com/*",
+    "https://api.rss2json.com/*",
+    "https://itunes.apple.com/*"
+  ],
+  "web_accessible_resources": [
+    "settings.html",
+    "settings.js"
+  ]
+}
