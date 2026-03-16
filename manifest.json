@@ -37,5 +37,12 @@
   "web_accessible_resources": [
     "settings.html",
     "settings.js"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
 }
