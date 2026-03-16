@@ -1,8 +1,9 @@
 var selectedLang      = "es";
 var selectedInterval  = 0;
-var selectedWordCount = 3;
-var autoClose         = false;
-var sources           = { wikipedia: true, trends: true, itunes: true, random: true, custom: false };
+var selectedWordCount = 2;
+var autoClose         = true;
+var activeTab         = false;
+var sources           = { wikipedia: true, trends: true, itunes: true, random: true, custom: true };
 
 // ── Grupos de botones ──────────────────────────────────────────────────────
 function setupGroup(groupId, btnClass, onSelect) {
@@ -69,6 +70,12 @@ autoCloseRow.addEventListener('click', function() {
   autoCloseRow.classList.toggle('checked', autoClose);
 });
 
+var activeTabRow = document.getElementById('activeTabRow');
+activeTabRow.addEventListener('click', function() {
+  activeTab = !activeTab;
+  activeTabRow.classList.toggle('checked', activeTab);
+});
+
 // ── Vista previa ───────────────────────────────────────────────────────────
 document.getElementById('btnPreview').addEventListener('click', function() {
   var preview = document.getElementById('preview');
@@ -88,7 +95,7 @@ browser.runtime.onMessage.addListener(function(msg) {
 });
 
 // ── Cargar config guardada ─────────────────────────────────────────────────
-browser.storage.local.get(['engine','interval','lang','autoClose','wordCount','sources','customWords']).then(function(data) {
+browser.storage.local.get(['engine','interval','lang','autoClose','wordCount','sources','customWords','activeTab']).then(function(data) {
   if (data.engine) document.getElementById('engine').value = data.engine;
 
   if (data.lang) {
@@ -101,7 +108,7 @@ browser.storage.local.get(['engine','interval','lang','autoClose','wordCount','s
     if (def) def.classList.add('active');
   }
 
-  var wc = data.wordCount || 3;
+  var wc = data.wordCount || 2;
   selectedWordCount = wc;
   document.querySelectorAll('#wordGroup .word-btn').forEach(function(b) {
     b.classList.toggle('active', parseInt(b.getAttribute('data-val')) === wc);
@@ -119,22 +126,32 @@ browser.storage.local.get(['engine','interval','lang','autoClose','wordCount','s
 
   if (data.sources) {
     sources = data.sources;
-    document.querySelectorAll('.source-btn').forEach(function(btn) {
-      var src = btn.getAttribute('data-source');
-      btn.classList.toggle('active', !!sources[src]);
-    });
-    if (sources.custom) {
-      document.getElementById('customArea').classList.add('visible');
-    }
+  }
+  document.querySelectorAll('.source-btn').forEach(function(btn) {
+    var src = btn.getAttribute('data-source');
+    btn.classList.toggle('active', !!sources[src]);
+  });
+  if (sources.custom) {
+    document.getElementById('customArea').classList.add('visible');
   }
 
+  // Cargar lista propia siempre, aunque la fuente esté desactivada
   if (data.customWords) {
     document.getElementById('customWords').value = data.customWords;
   }
 
-  if (data.autoClose) {
+  if (data.autoClose === undefined || data.autoClose) {
     autoClose = true;
     autoCloseRow.classList.add('checked');
+  }
+  // activeTab: por defecto false (segundo plano)
+  var shouldActiveTab = (data.activeTab === undefined) ? false : !!data.activeTab;
+  if (shouldActiveTab) {
+    activeTab = true;
+    activeTabRow.classList.add('checked');
+  } else {
+    activeTab = false;
+    activeTabRow.classList.remove('checked');
   }
 });
 
@@ -149,14 +166,14 @@ document.getElementById('btnSave').addEventListener('click', function() {
   browser.storage.local.set({
     engine: engine, lang: selectedLang, interval: selectedInterval,
     autoClose: autoClose, wordCount: selectedWordCount,
-    sources: sources, customWords: customWords
+    sources: sources, customWords: customWords, activeTab: activeTab
   }).then(function() {
     browser.storage.local.get(['enabled']).then(function(data) {
       if (data.enabled) {
         browser.runtime.sendMessage({
           action: 'start', interval: selectedInterval, engine: engine,
           lang: selectedLang, autoClose: autoClose, wordCount: selectedWordCount,
-          sources: sources, customWords: customWords
+          sources: sources, customWords: customWords, activeTab: activeTab
         });
       }
     });

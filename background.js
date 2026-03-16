@@ -199,20 +199,21 @@ function updateIcon(enabled, intervalSeconds) {
 }
 
 async function openSearch() {
-  const data = await browser.storage.local.get(["engine","enabled","lang","autoClose","wordCount","sources"]);
+  const data = await browser.storage.local.get(["engine","enabled","lang","autoClose","wordCount","sources","activeTab","customWords"]);
   if (!data.enabled) return;
-  const eng     = data.engine    || "google";
-  const lang    = data.lang      || "es";
-  const wc      = data.wordCount || 3;
-  const sources = data.sources   || { wikipedia: true, trends: true, random: true, custom: false, itunes: true };
-  const query   = await buildQuery(lang, wc, sources);
-  const url     = ENGINES[eng] + encodeURIComponent(query);
+  const eng       = data.engine    || "google";
+  const lang      = data.lang      || "es";
+  const wc        = data.wordCount || 2;
+  const sources   = data.sources   || { wikipedia: true, trends: true, random: true, custom: true, itunes: true };
+  const activeTab = (data.activeTab === undefined) ? false : !!data.activeTab;
+  const query     = await buildQuery(lang, wc, sources);
+  const url       = ENGINES[eng] + encodeURIComponent(query);
 
   if (data.autoClose && lastTabId !== null) {
     browser.tabs.remove(lastTabId).catch(() => {});
     lastTabId = null;
   }
-  browser.tabs.create({ url, active: false }).then(tab => { lastTabId = tab.id; });
+  browser.tabs.create({ url, active: activeTab }).then(tab => { lastTabId = tab.id; });
 }
 
 function startTimer(intervalSeconds) {
@@ -263,7 +264,7 @@ browser.runtime.onMessage.addListener((msg) => {
     browser.storage.local.set({
       enabled: true, interval: msg.interval, engine: msg.engine,
       lang: msg.lang, autoClose: msg.autoClose, wordCount: msg.wordCount,
-      sources: msg.sources, customWords: msg.customWords
+      sources: msg.sources, customWords: msg.customWords, activeTab: msg.activeTab
     });
     updateIcon(true, msg.interval);
   }
@@ -274,7 +275,7 @@ browser.runtime.onMessage.addListener((msg) => {
   }
   if (msg.action === "searchNow") {
     browser.storage.local.get(["engine","lang","wordCount","sources"]).then(async data => {
-      const sources = data.sources || { wikipedia:true, trends:true, random:true, custom:false, itunes:true };
+      const sources = data.sources || { wikipedia:true, trends:true, random:true, custom:true, itunes:true };
       const query   = await buildQuery(data.lang||"es", data.wordCount||3, sources);
       browser.tabs.create({ url: ENGINES[data.engine||"google"] + encodeURIComponent(query), active: true });
     });
@@ -294,7 +295,7 @@ browser.contextMenus.onClicked.addListener((info) => {
   }
   if (info.menuItemId === "searchNowMenu") {
     browser.storage.local.get(["engine","lang","wordCount","sources"]).then(async data => {
-      const sources = data.sources || { wikipedia:true, trends:true, random:true, custom:false, itunes:true };
+      const sources = data.sources || { wikipedia:true, trends:true, random:true, custom:true, itunes:true };
       const query   = await buildQuery(data.lang||"es", data.wordCount||3, sources);
       browser.tabs.create({ url: ENGINES[data.engine||"google"] + encodeURIComponent(query), active: true });
     });
@@ -302,7 +303,7 @@ browser.contextMenus.onClicked.addListener((info) => {
 });
 
 browser.storage.local.get(["enabled","interval"]).then(data => {
-  const interval = data.interval || 300;
+  const interval = (data.interval === undefined) ? 0 : data.interval;
   if (data.enabled) startTimer(interval);
   updateIcon(!!data.enabled, interval);
 });

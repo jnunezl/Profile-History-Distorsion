@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Random Search · Configuración</title>
+<title>Random Search 1.0 · Configuración</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -186,7 +186,7 @@
   <div class="field">
     <label>Idioma</label>
     <div class="btn-group" style="grid-template-columns: repeat(3, 1fr);" id="langGroup">
-      <button class="opt-btn" data-val="es">🇪🇸<br>Español</button>
+      <button class="opt-btn active" data-val="es">🇪🇸<br>Español</button>
       <button class="opt-btn" data-val="en">🇬🇧<br>English</button>
       <button class="opt-btn" data-val="fr">🇫🇷<br>Français</button>
       <button class="opt-btn" data-val="de">🇩🇪<br>Deutsch</button>
@@ -245,7 +245,7 @@
           <span class="source-desc">Lista aleatoria</span>
         </div>
       </div>
-      <div class="source-btn" data-source="custom" style="grid-column: span 2;">
+      <div class="source-btn active" data-source="custom" style="grid-column: span 2;">
         <div class="source-check">✓</div>
         <span class="source-icon">✏️</span>
         <div class="source-info">
@@ -254,7 +254,7 @@
         </div>
       </div>
     </div>
-    <div class="custom-area" id="customArea">
+    <div class="custom-area visible" id="customArea">
       <textarea id="customWords" placeholder="Una palabra o frase por línea:&#10;fotografía analógica&#10;senderismo Pirineos&#10;recetas veganas"></textarea>
     </div>
   </div>
@@ -264,8 +264,8 @@
     <label>Número de términos a combinar</label>
     <div class="btn-group cols10" id="wordGroup">
       <button class="word-btn" data-val="1">1</button>
-      <button class="word-btn" data-val="2">2</button>
-      <button class="word-btn active" data-val="3">3</button>
+      <button class="word-btn active" data-val="2">2</button>
+      <button class="word-btn" data-val="3">3</button>
       <button class="word-btn" data-val="4">4</button>
       <button class="word-btn" data-val="5">5</button>
       <button class="word-btn" data-val="6">6</button>
@@ -298,14 +298,22 @@
     </div>
   </div>
 
-  <!-- Cierre automático -->
+  <!-- Opciones -->
   <div class="field">
     <label>Opciones</label>
-    <div class="checkbox-row" id="autoCloseRow">
+    <div class="checkbox-row checked" id="autoCloseRow">
       <div class="checkbox-box"><span class="checkbox-tick">✓</span></div>
       <div>
         <span class="checkbox-label">Cerrar pestaña automáticamente</span>
         <span class="checkbox-desc">Cierra la pestaña anterior al abrir la siguiente</span>
+      </div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="checkbox-row checked" id="activeTabRow">
+      <div class="checkbox-box"><span class="checkbox-tick">✓</span></div>
+      <div>
+        <span class="checkbox-label">Abrir en primer plano</span>
+        <span class="checkbox-desc">Necesario para sumar puntos en Bing Rewards</span>
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Random Search",
-  "version": "13.0",
-  "description": "Búsquedas aleatorias: elige idioma, buscador e intervalo (segundos o minutos).",
+  "version": "1.0",
+  "description": "Búsquedas aleatorias automáticas: Wikipedia, Google Trends, iTunes, palabras random o lista propia.",
   "icons": {
     "48": "icon_active.png",
     "96": "icon_active.png"
