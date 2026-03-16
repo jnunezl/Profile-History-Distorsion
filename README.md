@@ -24,10 +24,10 @@ A Firefox extension that automatically performs random searches at configurable 
 ---
 
 ## 📸 Screenshots
-![Configuración completa](screenshots/image1.png)
-![Configuración del Buscador](screenshots/image1.png)
-![Configuración de las fuentes](screenshots/image1.png)
-![Configuración del tiempo de búsqueda](screenshots/image1.png)
+![Configuración completa](image1.png)
+![Configuración del Buscador](image2.png)
+![Configuración de las fuentes](image3.png)
+![Configuración del tiempo de búsqueda](image4.png)
 
 
 
